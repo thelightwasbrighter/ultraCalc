@@ -1,21 +1,37 @@
-from physics import *
+import math
+from functools import partial
 
-import numpy as np
-from cyclist import peter
+from physics import *
 from scipy.integrate import solve_ivp
+from gpx import f_grad
 
 # dv/dt = Fres / m
 # dx/dt = v
 
-def dvdt(v,x):
-    return Fres(peter.p,peter.crr,peter.cda,0,peter.mass,1.225,v) / peter.mass
+# dt/dv = m/Fres
+# d^2t/dx^2 = m/Fres*d/dx
+# dt/dx = 1/v
 
 def dxdt(v,x):
     return v
 
-def fun(t,y):
-    v = y[0]
-    x = y[1]
-    return (dvdt(v,x),dxdt(v,x))
+def cyclist_solver(cyclist):
+    def dvdt(v,x):
+        G = f_grad(x)
+        a = Fres(cyclist.grad_power(G),
+                 cyclist.crr,
+                 cyclist.v_cda(v),
+                 G,
+                 cyclist.mass,
+                 rho,
+                 v) / cyclist.mass
+        if v>50/3.6:
+            return min(0,a)
+        else:
+            return a
+        
+    def fun(t,y):
+        return (dvdt(*y),dxdt(*y))
 
-
+    return partial(solve_ivp,fun)
+    
