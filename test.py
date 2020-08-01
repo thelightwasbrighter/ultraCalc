@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+from multiprocessing import Pool
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 from physics import *
 import gpx,ode
 from cyclist import Cyclist
+
+CORES = 4
 
 cs = [Cyclist(86+18,
               180,
@@ -38,7 +40,12 @@ t0 = 0.0
 tf = 365*24*3600.0
 t_span = (t0,tf)
 t_eval = np.linspace(t0,tf,num=int(tf))
-rs = map(lambda c: ode.cyclist_solver(c)(t_span,y0,t_eval=t_eval,method='RK23',events=remaining_dist), cs)
+
+def solve(cyclist):
+    return ode.cyclist_solver(cyclist)(t_span,y0,t_eval=t_eval,method='RK23',events=remaining_dist)
+
+with Pool(CORES) as p:
+    rs = p.map(solve, cs)
 
 #grad=[gpx.f_grad(x)*100 for x in r[0].y[1]]
 
