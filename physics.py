@@ -1,7 +1,7 @@
 import math
 
 g   = 9.81
-rho = 1.225
+rho = 1.275
 
 def Cda(Cd,A):
     return Cd*A

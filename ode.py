@@ -5,6 +5,8 @@ from physics import *
 from scipy.integrate import solve_ivp
 from gpx import f_grad
 
+VMAX = 40/3.6
+
 # dv/dt = Fres / m
 # dx/dt = v
 
@@ -25,7 +27,7 @@ def cyclist_solver(cyclist):
                  cyclist.mass,
                  rho,
                  v) / cyclist.mass
-        if v>50/3.6:
+        if v>VMAX:
             return min(0,a)
         else:
             return a
