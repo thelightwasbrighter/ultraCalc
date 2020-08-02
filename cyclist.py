@@ -28,5 +28,5 @@ class Cyclist():
         return self.dte*p
 
     def __str__(self):
-        return "Cyclist: {}kg, {}W, cda{}, crr{}, {}DTE".format(self.mass,self.p,self.cda,self.crr,self.dte)
+        return "Cyclist: {}kg, {}W, cda{}, crr{}, {}DTE".format(round(self.mass,0),round(self.p,0),round(self.cda,2),round(self.crr,4),round(self.dte,2))
 
