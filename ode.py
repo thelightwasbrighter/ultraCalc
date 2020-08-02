@@ -3,7 +3,7 @@ from functools import partial
 
 from physics import *
 from scipy.integrate import solve_ivp
-from gpx import f_grad
+from gpx import f_grad,f_course
 
 VMAX = 40/3.6
 
@@ -17,7 +17,7 @@ VMAX = 40/3.6
 def dxdt(v,x):
     return v
 
-def cyclist_solver(cyclist):
+def solver(cyclist,wind):
     def dvdt(v,x):
         G = f_grad(x)
         a = Fres(cyclist.grad_power(G),
@@ -26,7 +26,10 @@ def cyclist_solver(cyclist):
                  G,
                  cyclist.mass,
                  rho,
-                 v) / cyclist.mass
+                 v,
+                 f_course(x),
+                 wind.v,
+                 wind.d) / cyclist.mass
         if v>VMAX:
             return min(0,a)
         else:
