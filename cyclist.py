@@ -9,7 +9,13 @@ class Cyclist():
         self.PbrakeMax = PbrakeMax
 
     def Pbrake(self,bend,v):
-        return self.PbrakeMax*max(0,v*bend-0.5)
+        #curve braking
+        p_tot = self.PbrakeMax*max(0,v*bend-0.5)
+        #max speed braking
+        if v>self.vmax:
+            p_tot += self.PbrakeMax*(v-self.vmax)
+
+        return p_tot
         
     def v_cda(self,v):
         if v<15/3.6:

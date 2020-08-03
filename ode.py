@@ -24,10 +24,7 @@ def solver(cyclist,wind,route):
                  wind.v,
                  wind.d,
                  cyclist.Pbrake(route.f_curve(x),v)) / cyclist.mass
-        if v>cyclist.vmax:
-            return min(0,a)
-        else:
-            return a
+        return a
         
     def fun(t,y):
         return (dvdt(*y),dxdt(*y))
