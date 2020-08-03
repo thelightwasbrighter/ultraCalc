@@ -1,10 +1,11 @@
 class Cyclist():
-    def __init__(self,mass,p,cda,crr,dte):
+    def __init__(self,mass,p,cda,crr,dte,vmax=50/3.6):
         self.mass = mass
         self.p   = p
         self.cda = cda
         self.crr = crr
         self.dte = dte
+        self.vmax = vmax
 
     def v_cda(self,v):
         if v<15/3.6:

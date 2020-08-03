@@ -3,23 +3,16 @@ from functools import partial
 
 from physics import *
 from scipy.integrate import solve_ivp
-from gpx import f_grad,f_course
 
-VMAX = 40/3.6
 
-# dv/dt = Fres / m
 # dx/dt = v
-
-# dt/dv = m/Fres
-# d^2t/dx^2 = m/Fres*d/dx
-# dt/dx = 1/v
-
 def dxdt(v,x):
     return v
 
-def solver(cyclist,wind):
+def solver(cyclist,wind,route):
+    # dv/dt = Fres / m
     def dvdt(v,x):
-        G = f_grad(x)
+        G = route.f_grad(x)
         a = Fres(cyclist.grad_power(G),
                  cyclist.crr,
                  cyclist.v_cda(v),
@@ -27,10 +20,10 @@ def solver(cyclist,wind):
                  cyclist.mass,
                  rho,
                  v,
-                 f_course(x),
+                 route.f_course(x),
                  wind.v,
                  wind.d) / cyclist.mass
-        if v>VMAX:
+        if v>cyclist.vmax:
             return min(0,a)
         else:
             return a

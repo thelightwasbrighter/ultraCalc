@@ -12,23 +12,33 @@ from cyclist import Cyclist
 from wind import Wind
 
 CORES = 4
+gpx_file = 'brocken.gpx'
 
-cs = [Cyclist(w+18,
-              180,
-              0.4,
-              0.003448,
-              0.95) for w in range(85,86)]
+cs = [Cyclist(88+14,
+              120,
+              0.39,
+              0.0045,
+              0.95),
+      Cyclist(89+14,
+              120,
+              0.39,
+              0.0045,
+              0.95),
+      Cyclist(88+14,
+              130,
+              0.39,
+              0.0045,
+              0.95),
+]
 
-ws = [Wind(v/3.6,1.3*math.pi) for v in [0,5,10,15,20,25]]
+ws = [Wind(v/3.6,math.radians(140)) for v in [10,15,20]]
       
 experiments = tuple(itertools.product(cs,ws))
 
-x = 0.0
-for a,b in gpx.segs:
-    dist = a.distance_2d(b)
+route = gpx.Route(gpx_file)
 
 def remaining_dist(t,y):
-    return gpx.x[-1]-y[1]
+    return route.x_end-y[1]
 remaining_dist.terminal = True
     
 y0 = [1e-99,0.0]
@@ -39,16 +49,14 @@ t_eval = np.linspace(t0,tf,num=int(tf))
 
 def solve(arg):
     cyclist,wind = arg
-    return ode.solver(cyclist,wind)(t_span,y0,t_eval=t_eval,method='RK23',events=remaining_dist)
+    return ode.solver(cyclist,wind,route)(t_span,y0,t_eval=t_eval,method='RK23',events=remaining_dist)
 
 with Pool(CORES) as p:
     rs = p.map(solve, experiments)
 
-#grad=[gpx.f_grad(x)*100 for x in r[0].y[1]]
-
 for e,r in zip(experiments,rs):
     #plt.plot(list(map(lambda t:t/3600,r.t)),list(map(lambda v:v*3.6,r.y[0])))
-    plt.plot(list(map(lambda t:t/3600,r.t)),list(map(lambda x:x/1000,r.y[1])),label='|'.join(map(str,e)))
+    plt.plot(list(map(lambda t:t/3600,r.t)),list(map(lambda x:x/1000,r.y[1])),label=' | '.join(map(str,e)))
 
 #plt.plot(r.t,r.y[1])
 #plt.plot(r[0].t,grad)

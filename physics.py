@@ -13,8 +13,11 @@ def Fgrav(G,m):
     return math.sin(math.atan(G))*m*g
 
 def Fda(Cda,rho,v_cyc,d_cyc,v_win,d_win):
+    #wind direction
     a = d_cyc-d_win
+    #apparent wind speed
     w = math.sqrt((v_cyc+v_win*math.cos(a))**2+(v_win*math.sin(a))**2)
+    #apparent wind direction
     b = math.acos((v_cyc+(v_win*math.cos(a)))/w)
     return 0.5*Cda*rho*w**2*math.cos(b)
 
