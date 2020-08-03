@@ -22,7 +22,8 @@ def solver(cyclist,wind,route):
                  v,
                  route.f_course(x),
                  wind.v,
-                 wind.d) / cyclist.mass
+                 wind.d,
+                 cyclist.Pbrake(route.f_curve(x),v)) / cyclist.mass
         if v>cyclist.vmax:
             return min(0,a)
         else:

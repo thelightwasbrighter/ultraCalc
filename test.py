@@ -12,26 +12,32 @@ from cyclist import Cyclist
 from wind import Wind
 
 CORES = 4
-gpx_file = 'brocken.gpx'
+gpx_file = 'calobra.gpx'
 
-cs = [Cyclist(88+14,
-              120,
+cs = [Cyclist(88+20,
+              180,
               0.39,
-              0.0045,
-              0.95),
-      Cyclist(89+14,
-              120,
+              0.003448,
+              0.95,
+              70/3.6,
+              20000),
+      Cyclist(88+20,
+              180,
               0.39,
-              0.0045,
-              0.95),
-      Cyclist(88+14,
-              130,
+              0.003448,
+              0.95,
+              70/3.6,
+              10000),
+      Cyclist(88+20,
+              180,
               0.39,
-              0.0045,
-              0.95),
+              0.003448,
+              0.95,
+              70/3.6,
+              0),
 ]
 
-ws = [Wind(v/3.6,math.radians(140)) for v in [10,15,20]]
+ws = [Wind(v/3.6,math.radians(140)) for v in [15]]
       
 experiments = tuple(itertools.product(cs,ws))
 
@@ -55,7 +61,8 @@ with Pool(CORES) as p:
     rs = p.map(solve, experiments)
 
 for e,r in zip(experiments,rs):
-    #plt.plot(list(map(lambda t:t/3600,r.t)),list(map(lambda v:v*3.6,r.y[0])))
+    #plt.plot(list(map(lambda x:x/1000,r.y[1])),list(map(lambda x:x*3.6,r.y[0])),label=' | '.join(map(str,e)))
+    #plt.plot(list(map(lambda t:t/3600,r.t)),list(map(lambda x:x*3.6,r.y[0])),label=' | '.join(map(str,e)))
     plt.plot(list(map(lambda t:t/3600,r.t)),list(map(lambda x:x/1000,r.y[1])),label=' | '.join(map(str,e)))
 
 #plt.plot(r.t,r.y[1])

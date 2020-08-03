@@ -1,12 +1,16 @@
 class Cyclist():
-    def __init__(self,mass,p,cda,crr,dte,vmax=50/3.6):
+    def __init__(self,mass,P,cda,crr,dte,vmax=50/3.6,PbrakeMax=2000):
         self.mass = mass
-        self.p   = p
+        self.P   = P
         self.cda = cda
         self.crr = crr
         self.dte = dte
         self.vmax = vmax
+        self.PbrakeMax = PbrakeMax
 
+    def Pbrake(self,bend,v):
+        return self.PbrakeMax*max(0,v*bend-0.5)
+        
     def v_cda(self,v):
         if v<15/3.6:
             return self.cda*1.1
@@ -21,13 +25,13 @@ class Cyclist():
         if G<-a:
             p=0
         elif G<0:
-            p=(G+a)/a*self.p
+            p=(G+a)/a*self.P
         elif G<a:
-            p=self.p*(1+G/a*b)
+            p=self.P*(1+G/a*b)
         else:
-            p=self.p*(1+b)
+            p=self.P*(1+b)
         return self.dte*p
 
     def __str__(self):
-        return "Cyclist: {}kg, {}W, cda{}, crr{}, {}DTE".format(round(self.mass,0),round(self.p,0),round(self.cda,2),round(self.crr,4),round(self.dte,2))
+        return "Cyclist: {}kg, {}W, cda{}, crr{}, dte{}, vmax{}m/s, Pbrake{}W".format(round(self.mass,0),round(self.P,0),round(self.cda,2),round(self.crr,4),round(self.dte,2),round(self.vmax,2),round(self.PbrakeMax,0))
 
