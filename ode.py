@@ -23,7 +23,7 @@ def solver(cyclist,wind,route):
                  route.f_course(x),
                  wind.v,
                  wind.d,
-                 cyclist.Pbrake(route.f_curve(x),v)) / cyclist.mass
+                 cyclist.Pbrake(v)) / cyclist.mass
         return a
         
     def fun(t,y):

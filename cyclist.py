@@ -8,14 +8,15 @@ class Cyclist():
         self.vmax = vmax
         self.PbrakeMax = PbrakeMax
 
-    def Pbrake(self,bend,v):
+    def Pbrake(self,v):
         #curve braking
-        p_tot = self.PbrakeMax*max(0,v*bend-0.5)
+        #p_crv = self.PbrakeMax*max(0,v)*max(0,abs(bend)-0.2)
         #max speed braking
-        if v>self.vmax:
-            p_tot += self.PbrakeMax*(v-self.vmax)
+        p_vmx = max(0,self.PbrakeMax*(v-self.vmax))
 
-        return p_tot
+        #return p_crv+p_vmx
+        return p_vmx
+
         
     def v_cda(self,v):
         if v<15/3.6:
@@ -25,7 +26,7 @@ class Cyclist():
         else:
             return self.cda*0.9
         
-    def grad_power(self,G):
+    def power(self,G):
         a=0.05 #threshhold gradient
         b=0.25 #uphill power boost
         if G<-a:

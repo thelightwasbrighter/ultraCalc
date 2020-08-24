@@ -6,13 +6,10 @@ import gpxpy
 from gpxpy.gpx import mod_geo
 import math
 
-
 class Route():
     def __init__(self,gpx_file):
         with open(gpx_file,'r') as fh:
-            points_ = gpxpy.parse(fh).walk()
-
-        self.points = list(map(lambda t: t[0],points_))
+            self.points = tuple(map(lambda x: x[0],gpxpy.parse(fh).walk()))
 
         #point to point connections
         self.segs = tuple(zip(self.points[:-1],self.points[1:]))
@@ -33,10 +30,15 @@ class Route():
         #unwrap course for interpolation (modulo 2pi)
         course = unwrap(course)
 
-        self.f_elev = interp1d(x,elev,bounds_error=False,fill_value='extrapolate',kind='cubic',assume_sorted=True)
-        self.f_grad = partial(derivative,self.f_elev)
-        self.f_course = interp1d(x[:-1],course,bounds_error=False,fill_value='extrapolate',kind='previous',assume_sorted=True)
-        self.f_curve = partial(derivative,self.f_course)
-
+        self.f_elev      = interp1d(x,elev,bounds_error=False,fill_value='extrapolate',kind='cubic',assume_sorted=True)
+        self.f_grad      = partial(derivative,self.f_elev)
+        self.f_course    = interp1d(x[:-1],course,bounds_error=False,fill_value='extrapolate',kind='previous',assume_sorted=True)
+        self.f_curve     = partial(derivative,self.f_course)
         self.x_end = x[-1]
+
+    def f_curve_abs(self,x):
+        return abs(self.f_curve(x))
+        
+
+
     
