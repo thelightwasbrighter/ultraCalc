@@ -13,14 +13,15 @@ def solver(cyclist,wind,route):
     # dv/dt = Fres / m
     def dvdt(v,x):
         G = route.f_grad(x)
-        a = Fres(cyclist.grad_power(G),
+        d_cyc = route.f_course(x)
+        a = Fres(cyclist.power(G,v),
                  cyclist.crr,
-                 cyclist.v_cda(v),
+                 cyclist.cda(v,d_cyc,wind.v,wind.d,G),
                  G,
                  cyclist.mass,
                  rho,
                  v,
-                 route.f_course(x),
+                 d_cyc,
                  wind.v,
                  wind.d,
                  cyclist.Pbrake(v)) / cyclist.mass

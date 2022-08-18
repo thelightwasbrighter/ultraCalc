@@ -8,6 +8,7 @@ import math
 
 class Route():
     def __init__(self,gpx_file):
+        self.name = gpx_file
         with open(gpx_file,'r') as fh:
             self.points = tuple(map(lambda x: x[0],gpxpy.parse(fh).walk()))
 
@@ -38,7 +39,9 @@ class Route():
 
     def f_curve_abs(self,x):
         return abs(self.f_curve(x))
-        
+
+    def __str__(self):
+        return self.name
 
 
     
