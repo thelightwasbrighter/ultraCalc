@@ -12,7 +12,7 @@ from cyclist import Cyclist
 from wind import Wind
 
 CORES = 4
-gpx_files = ['routes/ab0.gpx']
+gpx_files = ['routes/taw2021.gpx']
 
 cs = [Cyclist(86+14,
               175,
@@ -27,7 +27,6 @@ ws = [Wind(v/3.6,math.radians(d)) for v,d in [(10,270),(15,270),(20,270)]]
 routes = tuple(map(gpx.Route,gpx_files))
 
 experiments = tuple(product(cs,ws,routes))
-
     
 y0 = [0.1,0.0]
 t0 = 0.0
